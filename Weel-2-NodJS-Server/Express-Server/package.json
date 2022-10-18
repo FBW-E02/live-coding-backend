@@ -1,0 +1,16 @@
+{
+  "name": "express-server",
+  "version": "1.0.0",
+  "description": "creating our first express server",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
