@@ -1,11 +1,9 @@
 const http = require("http")
 const fs = require("fs")
+
 //create http server
 const server = http.createServer((req,res)=>{
 
-    console.log(req.method)
-    console.log(req.url)
-    console.log(req.headers)
 if(req.method==="GET"){
      if(req.url === "/"){
         const data = fs.readFileSync("./frontendcode/index.html")
@@ -18,9 +16,11 @@ if(req.method==="GET"){
         res.write(data)
     }else if(req.url==="/profile"){
         res.write("please login first")
-    }
-
-}else{
+    }else if( req.url.match(".png$") || req.url.match(".jpg$")  ){      //    /1.png or /Client-server-svc.png
+        const data = fs.readFileSync(`./frontendcode/images${req.url}`)
+        res.write(data)
+} 
+}else {
     res.write("we dont handle methods other than GET ")
 }
    
