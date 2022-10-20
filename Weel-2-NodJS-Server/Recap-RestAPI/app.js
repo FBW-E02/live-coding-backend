@@ -7,7 +7,6 @@ const app = express()
 const PORT = 4000;
 //cors middleware
 app.use(cors({origin:"http://localhost:3000"}))
-
 //set cors custom middleware
 /*  app.use((req,res,next)=>{
     console.log(req.method)
@@ -17,7 +16,6 @@ app.use(cors({origin:"http://localhost:3000"}))
 
 // body-parser (package to parse json data // url encoded data)
 //middleware
-
 app.use(express.json()) // parse json data in any incoming request
 
 /* app.use(express.urlencoded({extended:true}))  parsing array data*/
@@ -30,7 +28,6 @@ app.get("/products/:id", getSingleProduct)
 
 //Endpoint POST "/products"
 app.post("/products", postAddProduct)
-
 
 //Endpoint PATCH "/products/:id"
 //updating in existing resources
