@@ -1,9 +1,19 @@
 import express from "express";
 import { deleteProduct, getAllProducts, getSingleProduct, patchProduct, postAddProduct, putProduct } from "./controllers/productControllers.js";
 import { products } from "./models/products.js";
+import cors from "cors"
 
 const app = express()
 const PORT = 4000;
+//cors middleware
+app.use(cors({origin:"http://localhost:3000"}))
+
+//set cors custom middleware
+/*  app.use((req,res,next)=>{
+    console.log(req.method)
+    res.header("Access-Control-Allow-Origin", "http://localhost:3000") 
+    next()
+})  */
 
 // body-parser (package to parse json data // url encoded data)
 //middleware
