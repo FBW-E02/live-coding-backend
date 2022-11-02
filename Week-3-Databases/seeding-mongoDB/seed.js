@@ -12,7 +12,6 @@ mongoose.connect("mongodb://127.0.0.1:27017/seeding-data"/*  ,()=>{
 
 /* mongoose.connect("mongodb://127.0.0.1:27017", {dbName:"seeding-data"} ,()=>{console.log("connection to MongoDB established !")} )  */
 /* use seeding-data */
-
 // seed data into users collection
 function addUser(){
     const user = new UsersCollection({
@@ -21,6 +20,7 @@ function addUser(){
         email:faker.internet.email(),
         password:faker.internet.password(),
         age:faker.datatype.number({min:18, max:55})
+     
         // age:"25a" //NaN
     })
     //storing user instance into our users collection
@@ -34,13 +34,23 @@ function addUser(){
 
 mongoose.connection.close() */
 
-/* const promises = Array(20).fill(null).map(()=>{
+ 
+
+/* Promise.all(promises).then(()=>{
+    mongoose.connection.close()
+})  */
+
+async function purgeAndAddUsers(){
+    
+    await deleteUsers()
+
+   const promises = Array(20).fill(null).map(()=>{
     return addUser() //returns a promise
 })
-
-Promise.all(promises).then(()=>{
+    await Promise.all(promises)
     mongoose.connection.close()
-}) */
+}
+purgeAndAddUsers()
 
 // READ DATA from DB ;
 async function getAllUsers(){
@@ -70,9 +80,9 @@ async function updateUser(){
 
 //DELETE DATA from DB
 async function deleteUsers(){
-   /*  const result = await UsersCollection.deleteMany() */
-    const result = await UsersCollection.deleteOne({_id:"635a393963271eba677c56e0"})
-    console.log(result)
+    const result = await UsersCollection.deleteMany()
+   /*  const result = await UsersCollection.deleteOne({_id:"635a393963271eba677c56e0"})
+    console.log(result) */
 }
 /* deleteUsers() */
 
