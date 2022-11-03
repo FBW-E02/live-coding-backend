@@ -8,6 +8,12 @@ route.get( "/" , (req,res)=>{
     //Controller // request handler
      res.send("Recieved get request on orders")  
 } )
+
+// Route GET "/orders/:id"
+route.get("/:id", (req,res)=>{
+    res.send("we have received get request for single order")
+})
+
 // Route POST "/orders"
 route.post("/", (req,res)=>{
     res.send("Recieved post request on orders")

@@ -1,11 +1,20 @@
 import express from "express"
 import morgan from "morgan"
+import mongoose from "mongoose"
+import dotenv from "dotenv"
+dotenv.config(); 
+
 import usersRoute from "./routes/usersroute.js"
 import recordsRoute from "./routes/recordsroute.js"
 import ordersRoute from "./routes/ordersroute.js"
 //creating/initializing express server
 const app = express()
 const PORT = 4000; 
+
+//create mongoose connection
+mongoose.connect(process.env.MONGO_URI , ()=>{
+    console.log("DB connection established ! ")
+})
 
 // app.use all methods : get,post,patch, ..... any URL 
 app.use( morgan("dev") )
