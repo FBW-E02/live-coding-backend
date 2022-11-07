@@ -1,31 +1,21 @@
 import express from "express"
+import { createOrder, deleteOrder, getAllOrders, getSingleOrder, updateOrder } from "../controllers/orderscontroller.js"
 
 const route = express.Router()
 
 
 // Route GET "/orders"
-route.get( "/" , (req,res)=>{
-    //Controller // request handler
-     res.send("Recieved get request on orders")  
-} )
+route.get( "/" , getAllOrders)
 
 // Route GET "/orders/:id"
-route.get("/:id", (req,res)=>{
-    res.send("we have received get request for single order")
-})
+route.get("/:id", getSingleOrder)
 
 // Route POST "/orders"
-route.post("/", (req,res)=>{
-    res.send("Recieved post request on orders")
-})
+route.post("/", createOrder)
 // Route PATCH "/orders/:id"
-route.patch("/:id", (req,res)=>{
-    res.send("Recieved patch request on orders")
-})
+route.patch("/:id", updateOrder)
 // Route DELETE "/orders/:id"
-route.delete("/:id", (req,res)=>{
-    res.send("Recieved delete request on orders")
-})
+route.delete("/:id", deleteOrder)
 
 
 //Important !!!

@@ -37,6 +37,17 @@ app.use("/records",recordsRoute)
 // "/orders" GET POST PATCH DELETE
 app.use("/orders",ordersRoute)
 
+// handling 404 page not found error (error handling middleware)
+app.use( (req,res,next)=>{
+   /*  res.json({success:false, message:"there is no such route found"}) */
+    res.sendFile("./views/pageNotFound.html",{root:"."})
+})
+
+
+//universal error handler middleware
+app.use(( err, req,res,next)=>{
+    res.json({success:false, message:err.message})
+})
 
 //listening request on port 4000
 app.listen(PORT, ()=>console.log("server is running on port :",PORT))

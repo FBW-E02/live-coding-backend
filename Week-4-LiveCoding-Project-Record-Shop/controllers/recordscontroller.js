@@ -2,18 +2,18 @@ import RecordsCollection from "../models/recordsschema.js"
 import OrdersColleciton from "../models/ordersschema.js"
 import USersCollection from "../models/usersschema.js"
 
-export const getAllRecords = async (req,res)=>{
+export const getAllRecords = async (req,res,next)=>{
     //Controller // request handler
     try{
         const records = await RecordsCollection.find()
         res.json(records)  
     } 
     catch(err){
-        res.json({success:false, message: err.message})
+        next(err)
     }
 }
 
-export const getSingleRecord = async(req,res)=>{
+export const getSingleRecord = async(req,res,next)=>{
     "/records/:id"
     "/records/123"
     try{
@@ -23,12 +23,11 @@ export const getSingleRecord = async(req,res)=>{
 
     }
     catch(err){
-        const error = new Error("Record doesn't exist")
-        res.json({success:false, message:error.message }) 
+       next(err)
     }
 }
 
-export const createRecord = async (req,res)=>{
+export const createRecord = async (req,res,next)=>{
     //POST request to create record
     try{
         const record = new RecordsCollection(req.body)
@@ -36,13 +35,13 @@ export const createRecord = async (req,res)=>{
         res.json({success:true, record})
     }
     catch(err){
-        res.json({success:false, message:err.message }) 
+        next(err)
     }
 
 }
 
 
-export const updateRecord = async (req,res)=>{
+export const updateRecord = async (req,res,next)=>{
     // Patch request /records/:id
     try{
         const id = req.params.id ;
@@ -50,13 +49,13 @@ export const updateRecord = async (req,res)=>{
         res.json({success:true, record:updatedRecord})
     }
     catch(err){
-        res.json({success:false, message:err.message })
+        next(err)
     }
 }
 
 
 
-export const deleteRecord = async (req,res)=>{
+export const deleteRecord = async (req,res,next)=>{
     //Delete request /records/:id
     try{
         const {id}= req.params 
@@ -74,6 +73,6 @@ export const deleteRecord = async (req,res)=>{
         
     }
     catch(err){
-        res.json({success:false, message:err.message })
+        next(err)
     }
 }

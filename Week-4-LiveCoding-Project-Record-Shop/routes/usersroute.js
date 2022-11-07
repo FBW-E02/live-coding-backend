@@ -1,31 +1,21 @@
 import express from "express"
+import { createUser, deleteUser, getAllUsers, getSingleUser, updateUser } from "../controllers/userscontroller.js"
 
 const route = express.Router()
 
 // Route GET "/users"
 
-route.get( "/" , (req,res)=>{
-    //Controller // request handler
-     res.send("Recieved get request on users")  
-} )
+route.get( "/" , getAllUsers)
 
 // Route GET "/users/:id"
-route.get("/:id", (req,res)=>{
-    res.send("we have received get request for single user")
-})
+route.get("/:id", getSingleUser)
 
 // Route POST "/users"
-route.post("/", (req,res)=>{
-    res.send("Recieved post request on users")
-})
+route.post("/", createUser)
 // Route PATCH "/users/:id"
-route.patch("/:id", (req,res)=>{
-    res.send("Recieved patch request on users")
-})
+route.patch("/:id", updateUser)
 // Route DELETE "/users/:id"
-route.delete("/:id", (req,res)=>{
-    res.send("Recieved delete request on users")
-})
+route.delete("/:id", deleteUser)
 
 
 //Important !!!
