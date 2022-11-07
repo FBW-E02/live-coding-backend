@@ -17,7 +17,10 @@ mongoose.connect(process.env.MONGO_URI , ()=>{
 })
 
 // app.use all methods : get,post,patch, ..... any URL 
-app.use( morgan("dev") )
+app.use( morgan("dev") ) // external and custom middleware
+
+//expres json middleware to parse any incoming json data
+app.use(express.json())
 
 //MVC 
 // MODELS (data storage)

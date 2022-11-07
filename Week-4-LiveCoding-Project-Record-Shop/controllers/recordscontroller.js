@@ -4,22 +4,76 @@ import USersCollection from "../models/usersschema.js"
 
 export const getAllRecords = async (req,res)=>{
     //Controller // request handler
-
-    const records = await RecordsCollection.find()
-     res.json(records)  
-
-}
-export const getSingleRecord = (req,res)=>{
-    res.send("we have received get request for single record")
-}
-
-export const createRecord = (req,res)=>{
-    res.send("Recieved post request on records")
+    try{
+        const records = await RecordsCollection.find()
+        res.json(records)  
+    } 
+    catch(err){
+        res.json({success:false, message: err.message})
+    }
 }
 
-export const updateRecord = (req,res)=>{
-    res.send("Recieved patch request on records")
+export const getSingleRecord = async(req,res)=>{
+    "/records/:id"
+    "/records/123"
+    try{
+        const id = req.params.id
+        const singleRecord = await RecordsCollection.findById(id)
+        res.json({success:true, record:singleRecord})
+
+    }
+    catch(err){
+        const error = new Error("Record doesn't exist")
+        res.json({success:false, message:error.message }) 
+    }
 }
-export const deleteRecord = (req,res)=>{
-    res.send("Recieved delete request on records")
+
+export const createRecord = async (req,res)=>{
+    //POST request to create record
+    try{
+        const record = new RecordsCollection(req.body)
+        await record.save()
+        res.json({success:true, record})
+    }
+    catch(err){
+        res.json({success:false, message:err.message }) 
+    }
+
+}
+
+
+export const updateRecord = async (req,res)=>{
+    // Patch request /records/:id
+    try{
+        const id = req.params.id ;
+        const updatedRecord = await RecordsCollection.findByIdAndUpdate(id, req.body,{new:true} )
+        res.json({success:true, record:updatedRecord})
+    }
+    catch(err){
+        res.json({success:false, message:err.message })
+    }
+}
+
+
+
+export const deleteRecord = async (req,res)=>{
+    //Delete request /records/:id
+    try{
+        const {id}= req.params 
+        //findByIdAndDelete
+/*         const deletedItem = await RecordsCollection.findByIdAndRemove(id) */
+
+        const existingRecord = await RecordsCollection.findById(id)
+
+        if(existingRecord){
+            const deleteStatus = await RecordsCollection.deleteOne({_id:existingRecord._id})
+            res.json({success:true, status: deleteStatus})
+        }else{
+            throw new Error("record id doesn't exist ! ")
+        }
+        
+    }
+    catch(err){
+        res.json({success:false, message:err.message })
+    }
 }
