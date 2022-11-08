@@ -22,6 +22,23 @@ app.use( morgan("dev") ) // external and custom middleware
 //expres json middleware to parse any incoming json data
 app.use(express.json())
 
+
+
+//Customer middleware
+/* function log(req,res,next){
+        console.log("I am a middleware")
+        next() 
+}
+function checkMethod(req,res,next){
+    console.log("I am Second middleware")
+    next()
+}
+function thirdMiddleware(req,res,next){
+    console.log("I am third middleware")
+}
+
+app.use(  log , checkMethod , thirdMiddleware) */
+
 //MVC 
 // MODELS (data storage)
 // VIEWS (UI ,frontend , presentational data)
@@ -29,7 +46,7 @@ app.use(express.json())
 
 //Routes 
 // "/users" GET POST PATCH DELETE
-app.use("/users", usersRoute)
+app.use("/users",  usersRoute)
 
 // "/records" GET POST PATCH DELETE
 app.use("/records",recordsRoute)
@@ -45,12 +62,11 @@ app.use( (req,res,next)=>{
 
 
 //universal error handler middleware
+// request along with an error enters into this middleware
 app.use(( err, req,res,next)=>{
     res.json({success:false, message:err.message})
 })
 
 //listening request on port 4000
 app.listen(PORT, ()=>console.log("server is running on port :",PORT))
-
-
 

@@ -1,6 +1,9 @@
 /* import RecordsCollection from "../models/recordsschema.js"
 import OrdersColleciton from "../models/ordersschema.js" */
 import UsersCollection from "../models/usersschema.js"
+import {validationResult} from "express-validator"
+
+
 
 export const getAllUsers = async (req,res,next)=>{
     //Controller // request handler
@@ -9,7 +12,8 @@ export const getAllUsers = async (req,res,next)=>{
         res.json(users)  
     } 
     catch(err){
-        next(err)
+        next(err)  //  => REQ,ERR
+    
     }
 }
 
@@ -27,12 +31,13 @@ export const getSingleUser = async(req,res,next)=>{
     }
 }
 
+
 export const createUser = async (req,res,next)=>{
     //POST request to create User
     try{
-        const user = new UsersCollection(req.body)
-        await user.save()
-        res.json({success:true, user})
+            const user = new UsersCollection(req.body)
+             await user.save()
+            res.json({success:true, user})   
     }
     catch(err){
        next(err)
