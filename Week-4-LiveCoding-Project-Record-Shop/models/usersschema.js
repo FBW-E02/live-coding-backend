@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-
+import bcrypt from "bcrypt"
 const Schema = mongoose.Schema 
 
 //user document structure
@@ -8,7 +8,32 @@ const userSchema = new Schema({
     lastName: {type:String, required:true},
     email:{type:String, required:true, unique: true}, 
     password: {type:String, required:true}
+}, {
+    toJSON:{
+        virtuals:true
+    },
+    toObject:{
+        virtuals:true
+    }
+} )
+
+userSchema.virtual("fullName").get(function(){
+    return this.firstName+" "+this.lastName
 })
+userSchema.virtual("domain").get(function(){
+    return this.email.split("@")[1].split(".")[0]
+})
+
+userSchema.pre("save", function(next){ 
+    const hashedPassword = bcrypt.hashSync(this.password ,10)
+    this.password = hashedPassword;
+    console.log("password hashed and store into DB")
+    next() 
+} )
+userSchema.post("save", function(){
+    console.log("I am Post_Save function")
+})
+
 
 const UsersCollection = mongoose.model("users", userSchema)
 

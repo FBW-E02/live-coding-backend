@@ -2,7 +2,7 @@
 import OrdersColleciton from "../models/ordersschema.js" */
 import UsersCollection from "../models/usersschema.js"
 import {validationResult} from "express-validator"
-
+import bcrypt from "bcrypt"
 
 
 export const getAllUsers = async (req,res,next)=>{
@@ -27,16 +27,28 @@ export const getSingleUser = async(req,res,next)=>{
 
     }
     catch(err){
-        next(err)
+        const error  = new Error("Id doesn't exist")
+        error.status = 404;
+        next(error)
     }
 }
 
 
+//Register User // Signup User
 export const createUser = async (req,res,next)=>{
     //POST request to create User
     try{
+        //before storing user into database ,hash user password
+           //Hashing password using bcrypt
+           // bcrypt.hash asychronous  // bcrypt.hashSync synchronous
+           // bcrypt.compare asychronous  // bcrypt.compareSync synchronous 
+
+     /*    const hashedPassword = await bcrypt.hash(req.body.password,10 )
+        console.log(hashedPassword)
+        req.body.password = hashedPassword; */
             const user = new UsersCollection(req.body)
              await user.save()
+             console.log(user.fullName)
             res.json({success:true, user})   
     }
     catch(err){
@@ -80,4 +92,24 @@ export const deleteUser = async (req,res,next)=>{
     catch(err){
         next(err)
     }
+}
+
+export const loginUser = async(req,res,next)=>{
+    try{
+        const user = await UsersCollection.findOne({email: req.body.email})
+        if(user){
+            const check = await bcrypt.compare(req.body.password, user.password)
+            if(check){
+                res.json({success:true, data:user})
+            }else{
+                throw new Error("password doesn't match !")
+            }
+        }else{
+            throw new Error("email doesn't exist")
+        }
+    }
+    catch(err){
+        next(err)
+    }
+
 }

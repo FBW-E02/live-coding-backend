@@ -64,7 +64,7 @@ app.use( (req,res,next)=>{
 //universal error handler middleware
 // request along with an error enters into this middleware
 app.use(( err, req,res,next)=>{
-    res.json({success:false, message:err.message})
+    res.status(err.status || 500).json({success:false, message:err.message})
 })
 
 //listening request on port 4000
