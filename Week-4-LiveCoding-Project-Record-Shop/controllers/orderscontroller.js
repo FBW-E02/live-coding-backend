@@ -1,11 +1,13 @@
 /* import RecordsCollection from "../models/recordsschema.js"*/
 import OrdersCollection from "../models/ordersschema.js" 
+import UsersCollection from "../models/usersschema.js"
 /* import UsersCollection from "../models/usersschema.js" */
 
 export const getAllOrders = async (req,res,next)=>{
     //Controller // request handler
     try{
-        const orders = await OrdersCollection.find()
+        const orders = await OrdersCollection.find().populate("records","-_id -title -year").populate("userId","-_id -password -firstName -domain -email")
+
         res.json(orders)  
     } 
     catch(err){
@@ -32,6 +34,12 @@ export const createOrder = async (req,res,next)=>{
     try{
         const order = new OrdersCollection(req.body)
         await order.save()
+     /*    const user = await UsersCollection.findById(order.userId)
+        user.orders.push(order._id)
+        await user.save() */
+
+        await UsersCollection.findByIdAndUpdate(order.userId, {$push:{orders: order._id }}, {new:true})
+
         res.json({success:true, order})
     }
     catch(err){

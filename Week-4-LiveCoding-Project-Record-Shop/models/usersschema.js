@@ -6,8 +6,10 @@ const Schema = mongoose.Schema
 const userSchema = new Schema({
     firstName: {type:String, required:true},
     lastName: {type:String, required:true},
-    email:{type:String, required:true, unique: true}, 
-    password: {type:String, required:true}
+    email:{type:String, required:true, unique: true},
+    role:{type:String, enum:["user","manager"] , default:"user" },  
+    password: {type:String, required:true},
+    orders:[ {type:Schema.Types.ObjectId, ref:"orders"} ]
 }, {
     toJSON:{
         virtuals:true
@@ -20,16 +22,18 @@ const userSchema = new Schema({
 userSchema.virtual("fullName").get(function(){
     return this.firstName+" "+this.lastName
 })
-userSchema.virtual("domain").get(function(){
+/* userSchema.virtual("domain").get(function(){
     return this.email.split("@")[1].split(".")[0]
 })
-
+ */
 userSchema.pre("save", function(next){ 
-    const hashedPassword = bcrypt.hashSync(this.password ,10)
-    this.password = hashedPassword;
-    console.log("password hashed and store into DB")
-    next() 
+        const hashedPassword = bcrypt.hashSync(this.password ,10)
+        this.password = hashedPassword;  
+        console.log("password hashed and store into DB")
+         next() 
 } )
+
+
 userSchema.post("save", function(){
     console.log("I am Post_Save function")
 })
