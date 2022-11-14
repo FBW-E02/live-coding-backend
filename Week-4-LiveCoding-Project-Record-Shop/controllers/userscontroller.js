@@ -3,7 +3,7 @@ import OrdersColleciton from "../models/ordersschema.js" */
 import UsersCollection from "../models/usersschema.js"
 import {validationResult} from "express-validator"
 import bcrypt from "bcrypt"
-
+import jwt from "jsonwebtoken"
 
 export const getAllUsers = async (req,res,next)=>{
     //Controller // request handler
@@ -100,7 +100,17 @@ export const loginUser = async(req,res,next)=>{
         if(user){
             const check = await bcrypt.compare(req.body.password, user.password)
             if(check){
-                res.json({success:true, data:user})
+                //authentication // create token
+                // first argument in sign is payload (user's data)
+                let token = jwt.sign({_id:user._id, firstName: user.firstName}, process.env.TOKEN_SECRET_KEY ,{expiresIn:"1h",issuer:"Naqvi",audience:"students"})
+
+                const updatedUser = await UsersCollection.findByIdAndUpdate(user._id, {token:token},{new:true})
+
+                res.header("token",token )
+                res.json({success:true, data:updatedUser})
+
+              /*   res.header("token",token).json({success:true,data:user}) */
+
             }else{
                 throw new Error("password doesn't match !")
             }

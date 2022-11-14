@@ -7,7 +7,8 @@ const userSchema = new Schema({
     firstName: {type:String, required:true},
     lastName: {type:String, required:true},
     email:{type:String, required:true, unique: true},
-    role:{type:String, enum:["user","manager"] , default:"user" },  
+    role:{type:String, enum:["user","manager"] , default:"user" },
+    token:{type:String},  
     password: {type:String, required:true},
     orders:[ {type:Schema.Types.ObjectId, ref:"orders"} ]
 }, {

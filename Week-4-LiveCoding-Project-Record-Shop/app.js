@@ -52,7 +52,7 @@ app.use("/users",  usersRoute)
 app.use("/records",recordsRoute)
 
 // "/orders" GET POST PATCH DELETE
-app.use("/orders",ordersRoute)
+app.use("/orders", ordersRoute)
 
 // handling 404 page not found error (error handling middleware)
 app.use( (req,res,next)=>{
