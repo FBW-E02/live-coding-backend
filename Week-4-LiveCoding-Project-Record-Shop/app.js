@@ -3,13 +3,32 @@ import morgan from "morgan"
 import mongoose from "mongoose"
 import dotenv from "dotenv"
 dotenv.config(); 
-
+import cookieParser from "cookie-parser"
+import multer from "multer"
 import usersRoute from "./routes/usersroute.js"
 import recordsRoute from "./routes/recordsroute.js"
 import ordersRoute from "./routes/ordersroute.js"
+
+
 //creating/initializing express server
 const app = express()
 const PORT = 4000; 
+
+//config multer package //setting storage destination for our file
+/* const upload = multer({dest:"upload/"}) */
+
+//setup multer diskStorage
+const storage = multer.diskStorage({
+    destination:function(req,file,cb){
+        let fullPath= "./upload"
+        cb(null, fullPath)
+    },
+    filename:function(req,file,cb){
+        let fileName = Date.now()+"_"+ file.originalname
+        cb(null,fileName)
+    }
+})
+const upload = multer({storage:storage})
 
 //create mongoose connection
 mongoose.connect(process.env.MONGO_URI , ()=>{
@@ -22,6 +41,13 @@ app.use( morgan("dev") ) // external and custom middleware
 //expres json middleware to parse any incoming json data
 app.use(express.json())
 
+
+//cookie parser
+app.use(cookieParser())
+
+
+// serve static files/pages
+app.use(express.static("upload"))
 
 
 //Customer middleware
@@ -45,8 +71,8 @@ app.use(  log , checkMethod , thirdMiddleware) */
 // CONTROLLERS (request handlers , logic)
 
 //Routes 
-// "/users" GET POST PATCH DELETE
-app.use("/users",  usersRoute)
+// "/users" GET POST PATCH DELETE // upload.single will attached req.file
+app.use("/users",upload.single("image"),  usersRoute)
 
 // "/records" GET POST PATCH DELETE
 app.use("/records",recordsRoute)

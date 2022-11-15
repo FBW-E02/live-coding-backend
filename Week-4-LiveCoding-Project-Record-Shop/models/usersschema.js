@@ -8,7 +8,10 @@ const userSchema = new Schema({
     lastName: {type:String, required:true},
     email:{type:String, required:true, unique: true},
     role:{type:String, enum:["user","manager"] , default:"user" },
-    token:{type:String},  
+    token:{type:String},
+    profileImage:{type:String, default:function(){
+        return `https://joeschmoe.io/${this.firstName}`
+    } },  
     password: {type:String, required:true},
     orders:[ {type:Schema.Types.ObjectId, ref:"orders"} ]
 }, {

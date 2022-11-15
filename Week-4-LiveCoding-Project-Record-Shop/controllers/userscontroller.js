@@ -36,6 +36,7 @@ export const getSingleUser = async(req,res,next)=>{
 
 //Register User // Signup User
 export const createUser = async (req,res,next)=>{
+    console.log(req.file)
     //POST request to create User
     try{
         //before storing user into database ,hash user password
@@ -47,8 +48,9 @@ export const createUser = async (req,res,next)=>{
         console.log(hashedPassword)
         req.body.password = hashedPassword; */
             const user = new UsersCollection(req.body)
+            user.profileImage= `http://localhost:4000/${req.file.filename}`
              await user.save()
-             console.log(user.fullName)
+  
             res.json({success:true, user})   
     }
     catch(err){
@@ -106,7 +108,8 @@ export const loginUser = async(req,res,next)=>{
 
                 const updatedUser = await UsersCollection.findByIdAndUpdate(user._id, {token:token},{new:true})
 
-                res.header("token",token )
+               /*  res.header("token",token ) */
+               res.cookie("token",token)
                 res.json({success:true, data:updatedUser})
 
               /*   res.header("token",token).json({success:true,data:user}) */
