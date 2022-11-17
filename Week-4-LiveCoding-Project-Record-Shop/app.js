@@ -8,7 +8,7 @@ import multer from "multer"
 import usersRoute from "./routes/usersroute.js"
 import recordsRoute from "./routes/recordsroute.js"
 import ordersRoute from "./routes/ordersroute.js"
-
+import cors from "cors"
 
 //creating/initializing express server
 const app = express()
@@ -34,6 +34,9 @@ const upload = multer({storage:storage})
 mongoose.connect(process.env.MONGO_URI , ()=>{
     console.log("DB connection established ! ")
 })
+
+//cors middleware
+app.use(cors({origin:"http://localhost:3000"}))
 
 // app.use all methods : get,post,patch, ..... any URL 
 app.use( morgan("dev") ) // external and custom middleware
