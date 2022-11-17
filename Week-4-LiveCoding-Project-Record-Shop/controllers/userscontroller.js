@@ -48,7 +48,10 @@ export const createUser = async (req,res,next)=>{
         console.log(hashedPassword)
         req.body.password = hashedPassword; */
             const user = new UsersCollection(req.body)
-            user.profileImage= `http://localhost:4000/${req.file.filename}`
+            if(req.file){
+                user.profileImage= `http://localhost:4000/${req.file.filename}`
+            }
+            
              await user.save()
   
             res.json({success:true, user})   
