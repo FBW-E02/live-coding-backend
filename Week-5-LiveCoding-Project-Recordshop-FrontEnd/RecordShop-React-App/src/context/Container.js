@@ -4,6 +4,7 @@ import {MyContext} from "./MyContext"
 export default function Container(props) {
     const [records, setRecords]= useState([])
     const [cart,setCart]= useState([])
+    const [user,setUser]=useState(null)
 
     useEffect(()=>{
         //onload event
@@ -17,7 +18,7 @@ export default function Container(props) {
 
 
   return (
-    <MyContext.Provider value={{records,setRecords, cart,setCart}}>
+    <MyContext.Provider value={{records,setRecords, cart,setCart, user,setUser}}>
         {props.children}
     </MyContext.Provider>
   )

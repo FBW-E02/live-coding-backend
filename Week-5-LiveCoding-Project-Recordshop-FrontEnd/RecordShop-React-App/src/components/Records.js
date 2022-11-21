@@ -20,7 +20,7 @@ export default function Records() {
         <div>
             {records.map(record=>{
                 return (
-                    <div>
+                    <div key={record._id}>
                         <h2>{record.title}</h2>
                         <img src={record.img} width="200"/>
                         <h3>{record.author}</h3>

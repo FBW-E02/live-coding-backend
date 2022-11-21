@@ -2,17 +2,33 @@ import React, { useContext } from 'react'
 import { MyContext } from '../context/MyContext'
 
 export default function Cart() {
-    const {cart} = useContext(MyContext)
+    const {cart,setCart} = useContext(MyContext)
+    const decrementQuantity=(id)=>{
+        const foundRecord= cart.find(item=>item._id===id)
+        if(foundRecord.quantity===1){
+            setCart(cart.filter(item=>item._id !== id))
+        }else{
+            foundRecord.quantity--;
+            setCart([...cart]) // forcing rerendering 
+        }
+      
+    }
+
+    const incrementQuantity=(id)=>{
+        const foundRecord= cart.find(item=>item._id===id)
+       foundRecord.quantity++;
+       setCart([...cart]) // forcing rerendering
+    }
   return (
     <div>
         <h1>Cart</h1>
         <div>
             {cart.map(record=>{
                 return (
-                    <div>
+                    <div key={record._id}>
                         <img src={record.img} width="100"/>
                         <p>{record.title}</p>
-                        <p>quantity: {record.quantity}</p>
+                        <p>  quantity: <button onClick={()=>decrementQuantity(record._id)}> - </button> {record.quantity} <button onClick={()=>incrementQuantity(record._id)}> + </button></p>
                         <h1>${record.price}</h1>
                       
                     </div>
