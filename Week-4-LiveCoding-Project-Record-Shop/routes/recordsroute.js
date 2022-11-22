@@ -7,10 +7,8 @@ const route = express.Router()
 
 // Route GET "/records"
 route.get( "/" , getAllRecords )
-
 // Route GET "/records/:id"
 route.get("/:id", getSingleRecord )
-
 
 // Route POST "/records"
 route.post("/",verifyToken, isAdmin,  createRecord)
@@ -19,6 +17,7 @@ route.patch("/:id",verifyToken, isAdmin, updateRecord)
 
 // Route DELETE "/records/:id"
 route.delete("/:id",verifyToken, isAdmin, deleteRecord)
+
 
 
 //Important !!!

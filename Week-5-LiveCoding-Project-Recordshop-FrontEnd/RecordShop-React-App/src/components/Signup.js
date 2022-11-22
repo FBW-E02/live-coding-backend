@@ -1,12 +1,13 @@
-import React, {useRef} from 'react'
-import { useContext } from 'react'
+import React from 'react'
+
 import { useNavigate } from 'react-router-dom'
-import { MyContext } from '../context/MyContext'
+
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function Signup() {
 
 /*   const formRef = useRef() */
-  const {setUser} = useContext(MyContext)
+
 
   const navigate = useNavigate()
 
@@ -43,10 +44,13 @@ fetch("http://localhost:4000/users",
 .then(res=>res.json())
 .then(result=>{
   if(result.success){
-    setUser(result.user)
-    navigate("/records")
+    toast.success("Successfully Signed Up!")
+    setTimeout(()=>{
+        navigate("/login")
+    }, 2000)
+  
   }else{
-    alert(JSON.stringify(result.message))
+    toast.error(JSON.stringify(result.message) )
   }
 })
 
@@ -75,7 +79,7 @@ fetch("http://localhost:4000/users",
 
           <button>Register/Signup</button>
         </form>
-      
+      <Toaster position='top-center'/>
       </div>
   )
 }
