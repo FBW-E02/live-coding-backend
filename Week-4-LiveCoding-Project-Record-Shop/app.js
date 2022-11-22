@@ -36,7 +36,7 @@ mongoose.connect(process.env.MONGO_URI , ()=>{
 })
 
 //cors middleware
-app.use(cors({origin:"http://localhost:3000"}))
+app.use(cors({origin:"http://localhost:3000",exposedHeaders:["token"]}))
 
 // app.use all methods : get,post,patch, ..... any URL 
 app.use( morgan("dev") ) // external and custom middleware

@@ -10,7 +10,7 @@ const userSchema = new Schema({
     role:{type:String, enum:["user","manager"] , default:"user" },
     token:{type:String},
     profileImage:{type:String, default:function(){
-        return `https://joeschmoe.io/${this.firstName}`
+        return `https://joeschmoe.io/api/v1/${this.firstName}`
     } },  
     password: {type:String, required:true},
     orders:[ {type:Schema.Types.ObjectId, ref:"orders"} ]

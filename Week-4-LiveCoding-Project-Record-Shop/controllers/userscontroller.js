@@ -111,8 +111,8 @@ export const loginUser = async(req,res,next)=>{
 
                 const updatedUser = await UsersCollection.findByIdAndUpdate(user._id, {token:token},{new:true})
 
-               /*  res.header("token",token ) */
-               res.cookie("token",token)
+                res.header("token",token )
+             /*   res.cookie("token",token) */
                 res.json({success:true, data:updatedUser})
 
               /*   res.header("token",token).json({success:true,data:user}) */
@@ -127,5 +127,17 @@ export const loginUser = async(req,res,next)=>{
     catch(err){
         next(err)
     }
-
 }
+
+    export const checkUserToken = async (req,res,next)=>{
+        try{
+            const token = req.headers.token
+            const payload = jwt.verify(token, process.env.TOKEN_SECRET_KEY)
+
+            const user = await UsersCollection.findById(payload._id)
+            res.json({success:true, data: user})
+        }
+        catch(err){
+            next(err)
+        }
+    }
