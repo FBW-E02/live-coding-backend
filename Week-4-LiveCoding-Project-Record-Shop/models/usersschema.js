@@ -31,9 +31,12 @@ userSchema.virtual("fullName").get(function(){
 })
  */
 userSchema.pre("save", function(next){ 
+    if(this.isModified("password")){
         const hashedPassword = bcrypt.hashSync(this.password ,10)
         this.password = hashedPassword;  
-        console.log("password hashed and store into DB")
+        console.log("password hashed and store into DB")  
+    }
+  
          next() 
 } )
 

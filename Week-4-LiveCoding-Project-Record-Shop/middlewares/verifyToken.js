@@ -6,8 +6,8 @@ async function verifyToken(req,res,next){
     try{
         // extracting token out from headers
        /*  const { token } = req.headers */
-       console.log(req.cookies.token)
-        const token = req.cookies.token
+      /*  console.log(req.cookies.token) */
+        const token = req.headers.token
         //verify token
         const payload = jwt.verify(token , process.env.TOKEN_SECRET_KEY )
         

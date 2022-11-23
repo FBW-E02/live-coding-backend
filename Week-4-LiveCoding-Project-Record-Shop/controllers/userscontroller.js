@@ -66,9 +66,14 @@ export const createUser = async (req,res,next)=>{
 export const updateUser = async (req,res,next)=>{
     // Patch request /users/:id
     try{
-        const id = req.params.id ;
-        const updatedUser = await UsersCollection.findByIdAndUpdate(id, req.body,{new:true} )
-        res.json({success:true, User:updatedUser})
+        let user = await UsersCollection.findById(req.params.id)
+        if(req.file){
+            user.profileImage = `http://localhost:4000/${req.file.filename}`
+        }
+        await user.save()
+        const updatedUser = await UsersCollection.findByIdAndUpdate(req.params.id, req.body,{new:true} )
+        
+        res.json({success:true, data:updatedUser})
     }
     catch(err){
         next(err)
