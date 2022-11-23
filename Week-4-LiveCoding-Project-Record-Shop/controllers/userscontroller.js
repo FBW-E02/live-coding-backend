@@ -36,7 +36,6 @@ export const getSingleUser = async(req,res,next)=>{
 
 //Register User // Signup User
 export const createUser = async (req,res,next)=>{
-    console.log(req.file)
     //POST request to create User
     try{
         //before storing user into database ,hash user password
@@ -70,9 +69,20 @@ export const updateUser = async (req,res,next)=>{
         if(req.file){
             user.profileImage = `http://localhost:4000/${req.file.filename}`
         }
+        if(req.body.password){
+           user.password = req.body.password 
+        }
         await user.save()
-        const updatedUser = await UsersCollection.findByIdAndUpdate(req.params.id, req.body,{new:true} )
+
+        let body ={}
+        for(const key in req.body ){
+            if(req.body[key]!=="" && key !== "password"){
+                body[key] = req.body[key]
+            }
+        }
         
+       const updatedUser = await UsersCollection.findByIdAndUpdate(req.params.id, body ,{new:true} ) 
+     /*   const updatedUser = await UsersCollection.findOneAndUpdate({_id:req.params.id} , {$set: body} ,{new:true} )  */
         res.json({success:true, data:updatedUser})
     }
     catch(err){
