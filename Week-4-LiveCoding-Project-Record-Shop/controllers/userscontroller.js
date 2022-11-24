@@ -74,14 +74,14 @@ export const updateUser = async (req,res,next)=>{
         }
         await user.save()
 
-        let body ={}
+        let body = { }
         for(const key in req.body ){
             if(req.body[key]!=="" && key !== "password"){
                 body[key] = req.body[key]
             }
         }
         
-       const updatedUser = await UsersCollection.findByIdAndUpdate(req.params.id, body ,{new:true} ) 
+       const updatedUser = await UsersCollection.findByIdAndUpdate(req.params.id, body ,{new:true} ).populate("orders") 
      /*   const updatedUser = await UsersCollection.findOneAndUpdate({_id:req.params.id} , {$set: body} ,{new:true} )  */
         res.json({success:true, data:updatedUser})
     }
@@ -124,7 +124,7 @@ export const loginUser = async(req,res,next)=>{
                 // first argument in sign is payload (user's data)
                 let token = jwt.sign({_id:user._id, firstName: user.firstName}, process.env.TOKEN_SECRET_KEY ,{expiresIn:"1h",issuer:"Naqvi",audience:"students"})
 
-                const updatedUser = await UsersCollection.findByIdAndUpdate(user._id, {token:token},{new:true})
+                const updatedUser = await UsersCollection.findByIdAndUpdate(user._id, {token:token},{new:true}).populate("orders")
 
                 res.header("token",token )
              /*   res.cookie("token",token) */
@@ -149,7 +149,7 @@ export const loginUser = async(req,res,next)=>{
             const token = req.headers.token
             const payload = jwt.verify(token, process.env.TOKEN_SECRET_KEY)
 
-            const user = await UsersCollection.findById(payload._id)
+            const user = await UsersCollection.findById(payload._id).populate("orders")
             res.json({success:true, data: user})
         }
         catch(err){
