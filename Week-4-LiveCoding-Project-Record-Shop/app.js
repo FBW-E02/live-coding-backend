@@ -8,11 +8,11 @@ import multer from "multer"
 import usersRoute from "./routes/usersroute.js"
 import recordsRoute from "./routes/recordsroute.js"
 import ordersRoute from "./routes/ordersroute.js"
-import cors from "cors"
+/* import cors from "cors" */
 
 //creating/initializing express server
 const app = express()
-const PORT = 4000; 
+const PORT = process.env.PORT || 4000; 
 
 //config multer package //setting storage destination for our file
 /* const upload = multer({dest:"upload/"}) */
@@ -36,7 +36,7 @@ mongoose.connect(process.env.MONGO_URI , ()=>{
 })
 
 //cors middleware
-app.use(cors({origin:"http://localhost:3000",exposedHeaders:["token"]}))
+/* app.use(cors({origin:"http://localhost:3000",exposedHeaders:["token"]})) */
 
 // app.use all methods : get,post,patch, ..... any URL 
 app.use( morgan("dev") ) // external and custom middleware
@@ -51,7 +51,12 @@ app.use(cookieParser())
 
 // serve static files/pages
 app.use(express.static("upload"))
+// serve static files in views/build folder
+app.use(express.static("views/build"))
 
+app.get("/",(req,res)=>{
+    res.sendFile("./views/build/index.html")
+})
 
 //Customer middleware
 /* function log(req,res,next){
@@ -78,7 +83,7 @@ app.use(  log , checkMethod , thirdMiddleware) */
 app.use("/users",upload.single("image"),  usersRoute)
 
 // "/records" GET POST PATCH DELETE
-app.use("/records",recordsRoute)
+app.use("/records",upload.single("image"),recordsRoute)
 
 // "/orders" GET POST PATCH DELETE
 app.use("/orders", ordersRoute)

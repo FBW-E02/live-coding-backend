@@ -11,7 +11,7 @@ export default function Container(props) {
 
     useEffect(()=>{
         //onload event
-        fetch("http://localhost:4000/records")
+        fetch("/records")
         .then(res=> res.json())
         .then(result=>{
             console.log(result)
@@ -20,7 +20,7 @@ export default function Container(props) {
 
        const token = localStorage.getItem("token")
         if(token){
-          fetch("http://localhost:4000/users/checkusertoken", {method:"GET", headers:{token:token}} )
+          fetch("/users/checkusertoken", {method:"GET", headers:{token:token}} )
           .then(res=>res.json())
           .then(result=>{
             if(result.success){

@@ -25,7 +25,7 @@ export default function Profile() {
     data.append("firstName", firstNameRef.current.value);
     data.append("image", profileRef.current.files[0]);
 console.log(localStorage.getItem("token"))
-    fetch(`http://localhost:4000/users/${user._id}`, {
+    fetch(`/users/${user._id}`, {
       method: "PATCH",
       headers: { token: localStorage.getItem("token") },
       body: data,

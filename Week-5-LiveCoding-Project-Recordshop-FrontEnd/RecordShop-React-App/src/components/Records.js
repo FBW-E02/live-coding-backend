@@ -3,7 +3,7 @@ import React, { useContext } from 'react'
 import { MyContext } from '../context/MyContext'
 
 export default function Records() {
-    const {records,setCart,cart} = useContext(MyContext)
+    const {records,setCart,cart,user} = useContext(MyContext)
     const addItemIntoCart =(record)=>{
         const foundItem = cart.find(item=>item._id===record._id)
         if(foundItem){
@@ -27,6 +27,7 @@ export default function Records() {
                         <p>{record.year}</p>
                         <p>${record.price}</p>
                         <button onClick={()=>addItemIntoCart(record)}>Add To Cart</button>
+                        { user && user.role==="admin" && <button>delete</button>}
                     </div>
                 )
             })}

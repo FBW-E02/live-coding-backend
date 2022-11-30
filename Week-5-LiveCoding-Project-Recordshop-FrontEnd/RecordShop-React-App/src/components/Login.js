@@ -11,7 +11,7 @@ export default function Login() {
 
   const loginUser =(event)=>{
     event.preventDefault()
-    fetch("http://localhost:4000/users/login", 
+    fetch("/users/login", 
     { method:"POST",
       headers:{"Content-Type":"application/json"}, 
       body: JSON.stringify({ email : event.target.email.value , password : event.target.password.value })})

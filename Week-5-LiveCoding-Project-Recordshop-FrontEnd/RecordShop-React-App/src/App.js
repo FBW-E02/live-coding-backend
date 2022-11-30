@@ -2,6 +2,7 @@
 import React from 'react';
 import { useContext } from 'react';
 import { NavLink, Routes, Route} from "react-router-dom"
+import AdminPanel from './components/AdminPanel';
 import Cart from './components/Cart';
 import EditProfileUser from './components/EditProfileUser';
 import HomePage from './components/HomePage';
@@ -33,11 +34,13 @@ function App(props) {
             <li><NavLink to="/signup" >Signup </NavLink></li>  
             </> }
          
+         {user && user.role==="admin" && <li><NavLink to="/admin">Admin Panel</NavLink></li>}
           <li><NavLink to="/cart" >Cart <sup>{cart.length}</sup> </NavLink></li>
          
         </ul>
         <Routes>
           {/* Client Side Routing */}
+          <Route path="/admin" element={<AdminPanel/> }/>
           <Route path="/" element={ <HomePage/>}/>
           <Route path="/records" element={<Records/>} />
           <Route path="/login" element={<Login/>}/>

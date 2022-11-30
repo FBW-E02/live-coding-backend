@@ -17,7 +17,7 @@ export default function Profile() {
   };
 
   const deleteOrder = (id) => {
-    fetch(`http://localhost:4000/orders/${id}`, {
+    fetch(`/orders/${id}`, {
       method: "DELETE",
       headers: { token: localStorage.getItem("token") },
     })
@@ -28,6 +28,19 @@ export default function Profile() {
         }
       });
   };
+  const deleteUserAccount=()=>{
+    fetch(`/users/${user._id}`,{method:"DELETE", headers:{
+      token:localStorage.getItem("token")
+    }})
+    .then(res=>res.json())
+    .then(result=>{
+      if(result.success){
+        setUser(null)
+        localStorage.removeItem("token")
+        navigate("/signup")
+      }
+    })
+  }
   return (
     <div>
       <h1>Profile</h1>
@@ -53,7 +66,7 @@ export default function Profile() {
           </ul>
           <button onClick={editProfile}>Update Profile</button>
           <button onClick={logout}>logout</button>
-          <button>Delete User</button>
+          <button onClick={deleteUserAccount}>Delete User</button>
         </>
       )}
     </div>

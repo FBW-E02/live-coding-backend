@@ -30,9 +30,13 @@ export const getSingleRecord = async(req,res,next)=>{
 export const createRecord = async (req,res,next)=>{
     //POST request to create record
     try{
+
         const record = new RecordsCollection(req.body)
+        if(req.file){
+            record.img = `/${req.file.filename}`
+        }
         await record.save()
-        res.json({success:true, record})
+        res.json({success:true, data:record})
     }
     catch(err){
         next(err)

@@ -27,7 +27,7 @@ export default function Cart() {
     if (!user) {
       navigate("/login");
     } else {
-      fetch("http://localhost:4000/orders", {
+      fetch("/orders", {
         method: "POST",
         headers: {
           token: localStorage.getItem("token"),

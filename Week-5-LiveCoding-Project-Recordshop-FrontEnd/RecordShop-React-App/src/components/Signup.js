@@ -38,7 +38,7 @@ for(const key of userData){
 
 const data = new FormData(event.target)
 //send data to backend
-fetch("http://localhost:4000/users",
+fetch("/users",
     { method:"POST" , body:data }
 )
 .then(res=>res.json())
