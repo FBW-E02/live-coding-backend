@@ -1,19 +1,23 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useReducer } from 'react'
 import { MyContext } from './MyContext'
-import {v4 as uuid} from "uuid"
+import {reducer , initialState} from "../main/reducer"
 
 export default function Container({children}) {
   
-    const [tasks, setTasks] = useState( [
-      {id:uuid(), text:"Live Coding", status: false},
-      {id:uuid(), text:"Breakfast" , status :true},
-      {id:uuid(), text:"Exercises" , status :false},
-      {id:uuid(), text:"Music" , status :false}
-  ]
-)
+const [state, dispatch] = useReducer(reducer,initialState)
+  return (
+    <MyContext.Provider value={ {state, dispatch}}>
+        {children}
+    </MyContext.Provider>
+  )
+}
 
-    const updateTask=(task)=>{
+
+
+
+
+
+/* const updateTask=(task)=>{
     
       const updatedTasks = tasks.map(item=>{
         if(item.id === task.id){
@@ -36,12 +40,4 @@ export default function Container({children}) {
       const createTask = { id:uuid(), text: e.target.task.value, status:false }
       setTasks([...tasks, createTask])
       e.target.reset()
-    }
-  return (
-    <MyContext.Provider value={ {tasks ,updateTask, deleteTask ,addTodoTask}}>
-        {children}
-    </MyContext.Provider>
-  )
-}
-
-
+    } */

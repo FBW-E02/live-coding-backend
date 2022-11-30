@@ -4,21 +4,24 @@ import { MyContext } from "../context/MyContext";
 import TodoItem from "./TodoItem";
 
 export default function TodoContainer() {
-    const {tasks, updateTask, deleteTask,addTodoTask} =useContext(MyContext)
+    const {state, dispatch} =useContext(MyContext)
 
-    const doneTasks = tasks.filter(item=>item.status)
-    const pendingTasks= tasks.filter(item=>!item.status)
+    const doneTasks = state.tasks.filter(item=>item.status)
+    const pendingTasks= state.tasks.filter(item=>!item.status)
     
   return (
     <div>
-       <form onSubmit= {addTodoTask}>
+       <form onSubmit= {(e)=>{
+        e.preventDefault()
+        dispatch({type:"addItem", payload: e.target.task.value}) 
+        }}>
             <input type="text" name="task" /><button>add task</button>
        </form>
        
       <h1>TODO List</h1>
       <ul>
         {pendingTasks.map(task=>{
-            return( <TodoItem key={task.id} task = {task} updateTask={updateTask} deleteTask={deleteTask}/> )
+            return( <TodoItem key={task.id} task = {task} /> )
         })}
 
        {/*  <TodoItem task = "task 1"/>  */}    {/*  {TodoItem({task: "task 1"})} */}
@@ -29,7 +32,7 @@ export default function TodoContainer() {
       <h1>DONE Tasks</h1>
       <ul>
       {doneTasks.map(task=>{
-            return( <TodoItem key={task.id} task = {task} updateTask={updateTask} deleteTask={deleteTask}/> )
+            return( <TodoItem key={task.id} task = {task} /> )
         })}
      
      
