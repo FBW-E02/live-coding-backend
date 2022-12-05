@@ -41,7 +41,13 @@ export const createOrder = async (req, res, next) => {
       order.userId,
       { $push: { orders: order._id } },
       { new: true }
-    ).populate("orders");
+    ).populate({
+      path:"orders",
+      populate:{
+          path:"records",
+          model:"records"
+      }
+  });
 
     res.json({ success: true, data: updatedUser });
   } catch (err) {

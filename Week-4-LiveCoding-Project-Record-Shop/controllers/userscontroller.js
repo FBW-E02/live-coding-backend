@@ -81,7 +81,13 @@ export const updateUser = async (req,res,next)=>{
             }
         }
         
-       const updatedUser = await UsersCollection.findByIdAndUpdate(req.params.id, body ,{new:true} ).populate("orders") 
+       const updatedUser = await UsersCollection.findByIdAndUpdate(req.params.id, body ,{new:true} ).populate({
+        path:"orders",
+        populate:{
+            path:"records",
+            model:"records"
+        }
+    })
      /*   const updatedUser = await UsersCollection.findOneAndUpdate({_id:req.params.id} , {$set: body} ,{new:true} )  */
         res.json({success:true, data:updatedUser})
     }
@@ -124,7 +130,13 @@ export const loginUser = async(req,res,next)=>{
                 // first argument in sign is payload (user's data)
                 let token = jwt.sign({_id:user._id, firstName: user.firstName}, process.env.TOKEN_SECRET_KEY ,{expiresIn:"1h",issuer:"Naqvi",audience:"students"})
 
-                const updatedUser = await UsersCollection.findByIdAndUpdate(user._id, {token:token},{new:true}).populate("orders")
+                const updatedUser = await UsersCollection.findByIdAndUpdate(user._id, {token:token},{new:true}).populate({
+                    path:"orders",
+                    populate:{
+                        path:"records",
+                        model:"records"
+                    }
+                })
 
                 res.header("token",token )
              /*   res.cookie("token",token) */
@@ -149,7 +161,13 @@ export const loginUser = async(req,res,next)=>{
             const token = req.headers.token
             const payload = jwt.verify(token, process.env.TOKEN_SECRET_KEY)
 
-            const user = await UsersCollection.findById(payload._id).populate("orders")
+            const user = await UsersCollection.findById(payload._id).populate({
+                path:"orders",
+                populate:{
+                    path:"records",
+                    model:"records"
+                }
+            })
             res.json({success:true, data: user})
         }
         catch(err){
