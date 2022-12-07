@@ -13,7 +13,7 @@ route.get( "/" ,verifyToken, isAdmin, getAllOrders)
 route.get("/:id",verifyToken, getSingleOrder)
 
 // Route POST "/orders"
-route.post("/",verifyToken, createOrder)
+route.post("/", verifyToken, createOrder)
 // Route PATCH "/orders/:id"
 route.patch("/:id",verifyToken, updateOrder)
 // Route DELETE "/orders/:id"

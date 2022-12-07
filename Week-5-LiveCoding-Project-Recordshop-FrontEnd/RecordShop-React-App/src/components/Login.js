@@ -21,6 +21,7 @@ export default function Login() {
         return res.json()
       }) // parse json data in the body
       .then(result=>{
+        console.log(result.data)
         if(result.success){
           toast.success("Successfully LoggedIn ! ")
           setUser(result.data)

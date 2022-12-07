@@ -123,9 +123,10 @@ export const deleteUser = async (req,res,next)=>{
 export const loginUser = async(req,res,next)=>{
     try{
         const user = await UsersCollection.findOne({email: req.body.email})
-        if(user){
-            const check = await bcrypt.compare(req.body.password, user.password)
-            if(check){
+       
+       /*  if(user){
+            const check = await bcrypt.compare(req.body.password, user.password) */
+            if(await user.comparePassword(req.body.password)){
                 //authentication // create token
                 // first argument in sign is payload (user's data)
                 let token = jwt.sign({_id:user._id, firstName: user.firstName}, process.env.TOKEN_SECRET_KEY ,{expiresIn:"1h",issuer:"Naqvi",audience:"students"})
@@ -140,13 +141,13 @@ export const loginUser = async(req,res,next)=>{
 
                 res.header("token",token )
              /*   res.cookie("token",token) */
-                res.json({success:true, data:updatedUser})
+                res.json({success:true, data:updatedUser.publicFields()})
 
               /*   res.header("token",token).json({success:true,data:user}) */
 
-            }else{
+         /*    }else{
                 throw new Error("password doesn't match !")
-            }
+            } */
         }else{
             throw new Error("email doesn't exist")
         }
@@ -168,7 +169,7 @@ export const loginUser = async(req,res,next)=>{
                     model:"records"
                 }
             })
-            res.json({success:true, data: user})
+            res.json({success:true, data: user.publicFields()})
         }
         catch(err){
             next(err)

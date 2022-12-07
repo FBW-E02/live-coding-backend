@@ -9,11 +9,13 @@ async function verifyToken(req,res,next){
       /*  console.log(req.cookies.token) */
         const {token} = req.headers
         //verify token
-        const payload = jwt.verify(token , process.env.TOKEN_SECRET_KEY )
+      /*   const payload = jwt.verify(token , process.env.TOKEN_SECRET_KEY )
         
         // get user from database
-        const user = await UsersCollection.findById(payload._id)
-
+        const user = await UsersCollection.findById(payload._id) */
+        console.log("before")
+        const user = await UsersCollection.findUserByToken(token)
+        console.log("after")
         //attching user in request
         req.user = user; 
         next()

@@ -1,5 +1,6 @@
 import mongoose from "mongoose"
 import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
 const Schema = mongoose.Schema 
 
 //user document structure
@@ -49,10 +50,42 @@ userSchema.pre("save", function(next){
        next()    
 }) */
 
+userSchema.methods.publicFields=function(){
+    const user = this;
+    return {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email:user.email,
+        role:user.role,
+        profileImage:user.profileImage,
+        orders:user.orders,
+        _id:user._id
+    }
+}
+
+userSchema.methods.comparePassword= async function(password){
+    if(!password) return ;
+    const user = this;
+    const check = await bcrypt.compare(password, user.password)
+    return check
+}
 
 userSchema.post("save", function(){
     console.log("I am Post_Save function")
 })
+
+userSchema.statics.findUserByToken=async function(token){
+    /*  */
+    const User = this;
+    const payload = jwt.verify(token , process.env.TOKEN_SECRET_KEY )
+
+    console.log(payload._id)
+     const user = await User.findOne({_id:payload._id}) 
+ 
+   
+    console.log(user)
+    return user
+}
 
 
 const UsersCollection = mongoose.model("users", userSchema)
@@ -61,3 +94,4 @@ const UsersCollection = mongoose.model("users", userSchema)
 UsersCollection.createIndexes({email:-1})
 
 export default UsersCollection ;
+

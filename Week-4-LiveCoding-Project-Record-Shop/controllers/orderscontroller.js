@@ -32,6 +32,7 @@ export const createOrder = async (req, res, next) => {
   //POST request to create Order
   try {
     const order = new OrdersCollection(req.body);
+    console.log(order)
     await order.save();
     /*    const user = await UsersCollection.findById(order.userId)
         user.orders.push(order._id)
