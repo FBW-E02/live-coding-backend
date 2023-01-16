@@ -8,6 +8,8 @@ import ProductCollection from "./model/ProductSchema.js"
 import OrderCollection from "./model/OrderSchema.js"
 import GraphQLUpload from "graphql-upload/GraphQLUpload.mjs"
 import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.mjs"
+import ImageCollection from "./model/ImageSchema.js"
+import stream from "stream"
 //graphql-upload use to handle files in graphql
 
 const PORT = process.env.PORT || 4000;
@@ -114,7 +116,21 @@ const resolvers={
         },
         addFile:async(parent,args)=>{
             console.log(args)
-            return {filename:"sfdf",imageUrl:"sfafdsdf"}
+            const {filename, createReadStream} = await args.file
+
+            //create readstream
+            const readStream = createReadStream()
+            //convert stream into buffer    
+            let chunks=[]
+            for await(const chunk of readStream){
+                chunks.push(chunk)
+            }
+            const buf = Buffer.concat(chunks)
+            const name = Date.now()+"_"+filename
+            const image = await ImageCollection({filename:name, imageUrl:`http://localhost:4000/images/${name}`, data:buf})
+           await image.save()
+
+            return {filename,imageUrl:image.imageUrl}
         }
     }
 }
@@ -129,6 +145,15 @@ const server = new ApolloServer({
 
 async function connectServer(){
     await server.start()
+
+    //endpoint for image
+    app.get("/images/:filename",async (req,res)=>{
+        const image = await ImageCollection.findOne({filename:req.params.filename})
+        //buffer data into stream
+        const readStream = stream.Readable.from(image.data)
+        readStream.pipe(res)
+    })
+
     app.use("/graphql",graphqlUploadExpress(),bodyParser.json(), expressMiddleware(server , {context:({req})=>req}))
 
     app.listen(PORT, ()=>console.log("server is running on PORT :",PORT))
