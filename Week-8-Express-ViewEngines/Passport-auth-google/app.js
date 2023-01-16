@@ -1,5 +1,6 @@
 const express = require("express")
 const mongoose = require("mongoose")
+const cors = require("cors")
 require("dotenv").config()
 require("./passportConfig.js")
 require("./models/UserSchema.js")
@@ -11,6 +12,7 @@ mongoose.connect("mongodb://127.0.0.1:27017/passportUsers", ()=>console.log("db 
 
 console.log(process.env)
 const app = express()
+app.use(cors({origin:"*"}))
 /* app.use(cookieParser()) */
 
 //setting session
@@ -31,6 +33,12 @@ app.get("/",(req,res)=>{
     res.render("index")
 })
 
+app.get("/loginwithgoogle", (req,res)=>{
+    /* res.json({success:true,messgae:"work"}) */
+    console.log(req.headers)
+    res.redirect("/auth/google")
+  /*   res.redirect("/auth/google") */
+})
 
 app.get("/auth/google", passport.authenticate("google", {scope:["profile"]}))
 
