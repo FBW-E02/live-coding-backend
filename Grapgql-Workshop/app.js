@@ -5,7 +5,10 @@ import {expressMiddleware} from "@apollo/server/express4"
 import bodyParser from "body-parser"
 import UserCollection from "./model/UserSchema.js"
 import ProductCollection from "./model/ProductSchema.js"
-
+import OrderCollection from "./model/OrderSchema.js"
+import GraphQLUpload from "graphql-upload/GraphQLUpload.mjs"
+import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.mjs"
+//graphql-upload use to handle files in graphql
 
 const PORT = process.env.PORT || 4000;
 
@@ -17,15 +20,20 @@ mongoose.connect("mongodb://127.0.0.1:27017/graphql-apollo-server" ,()=>console.
 
 
 const typeDefs=`#graphql
+    scalar Upload
     type User {
         email:String
         password:String
         id:ID
-        orders:[ID]
+        orders:[Order]
+    }
+    type File {
+        filename:String
+        imageUrl:String
     }
     type Order {
         total:Int
-        products:[ID]
+        products:[Product]
         userId:ID
     }
 
@@ -44,12 +52,21 @@ const typeDefs=`#graphql
         addUser(email:String,password:String) : User
         updateUser(id:ID, password:String): User
         addProduct(title:String, price:Int): Product
+        addOrder(total:Int, products:[ID], userId:ID): Order
+        addFile(file:Upload):File
     }
 `
 const resolvers={
+    Upload:GraphQLUpload,
     Query:{
         users: async ()=>{
-            const users = await UserCollection.find()
+            const users = await UserCollection.find().populate({
+                path:"orders",
+                populate:{
+                    path:"products",
+                    model:"products"
+                }
+            })
             return users
         },
         products:async ()=>{
@@ -57,7 +74,13 @@ const resolvers={
             return products
         },
         user: async (parent, args)=>{  
-            const user = await UserCollection.findById(args.id)
+            const user = await UserCollection.findById(args.id).populate({
+                path:"orders",
+                populate:{
+                    path:"products",
+                    model:"products"
+                }
+            })
             return user
         },
         product: async (parent,args)=>{
@@ -80,6 +103,18 @@ const resolvers={
         updateUser:async (parent,args)=>{
             const updatedUser = await UserCollection.findByIdAndUpdate(args.id, {password:args.password}, {new:true})
             return updatedUser
+        },
+        addOrder:async (parent,args)=>{
+            const order = new OrderCollection(args)
+            await order.save()
+            const user = await UserCollection.findById(args.userId)
+            user.orders.push(order._id)
+            await user.save()
+            return order
+        },
+        addFile:async(parent,args)=>{
+            console.log(args)
+            return {filename:"sfdf",imageUrl:"sfafdsdf"}
         }
     }
 }
@@ -94,7 +129,7 @@ const server = new ApolloServer({
 
 async function connectServer(){
     await server.start()
-    app.use("/graphql",bodyParser.json(), expressMiddleware(server , {context:({req})=>req}))
+    app.use("/graphql",graphqlUploadExpress(),bodyParser.json(), expressMiddleware(server , {context:({req})=>req}))
 
     app.listen(PORT, ()=>console.log("server is running on PORT :",PORT))
 }
