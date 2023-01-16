@@ -10,6 +10,7 @@ import GraphQLUpload from "graphql-upload/GraphQLUpload.mjs"
 import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.mjs"
 import ImageCollection from "./model/ImageSchema.js"
 import stream from "stream"
+import cors from "cors"
 //graphql-upload use to handle files in graphql
 
 const PORT = process.env.PORT || 4000;
@@ -145,7 +146,7 @@ const server = new ApolloServer({
 
 async function connectServer(){
     await server.start()
-
+    app.use(cors({origin:"http://localhost:3000"}))
     //endpoint for image
     app.get("/images/:filename",async (req,res)=>{
         const image = await ImageCollection.findOne({filename:req.params.filename})
