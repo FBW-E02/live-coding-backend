@@ -1,0 +1,20 @@
+services:
+  nodeexpress:
+    build: ./express-application
+    image: first-image
+    container_name: mycontainer
+    ports:
+      - "4000:4000"
+    volumes:
+      - "./express-application:./first-dockerizeProject"
+  reactApplication:
+    build: ./react-app
+    image: second-image
+    container_name: mycontainer2
+    ports:
+      - "3000:3000"
+    volumes:
+      - "./react-app:./react-dockerizeProject"
+    
+
+    
