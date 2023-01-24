@@ -21,10 +21,12 @@ export async function getStaticProps(){
   //execute at the build time
   const response = await fetch("https://jsonplaceholder.typicode.com/users")
   const data = await response.json()
+  console.log("regenrating Static users page again")
   /* const myusers= data.slice(0,3) */  
 
   return {
-    props: {users: data}
+    props: {users: data},
+  /*   revalidate: 10 */
   }
 }
 
