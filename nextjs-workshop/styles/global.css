@@ -1,0 +1,10 @@
+.app{
+    width:90vw;
+    margin:0 auto;
+    height: 100vh;
+    padding: 20px;
+    border: 2px solid;
+}
+ul{
+    list-style: none;
+}
