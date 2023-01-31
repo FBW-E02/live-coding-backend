@@ -1,8 +1,11 @@
 <template>
  <!-- <h1>This is our first Vue Component</h1> -->
- <Header title="Random Users"/>
+ <div>
+   <Header title="Random Users"/>
  <h1>This is our first Vue Component</h1>
  <User/>
+ </div>
+
 </template>
 
 <script>
