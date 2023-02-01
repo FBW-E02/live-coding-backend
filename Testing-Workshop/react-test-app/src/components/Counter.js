@@ -21,7 +21,7 @@ export default function Counter({ title }) {
       </h1>
       <input type="number" value={inputValue} onChange={(e)=>setInputValue(e.target.value)} />
       <button onClick={increment}>increment</button>
-      <button onClick={decrement}>Decrement</button>
+      <button onClick={decrement}>decrement</button>
       <button onClick={reset}>Reset</button>
     </div>
   );
